@@ -498,6 +498,29 @@ The `tx_signature` field accepts both EVM transaction hashes (0x-prefixed hex st
 
 ---
 
+## POST /api/v1/purchase/stripe
+
+Initiate a credit pack purchase via Stripe (Visa/Mastercard). Returns a Stripe checkout URL. The webhook handles credit addition automatically after successful payment.
+
+### Request
+
+```typescript
+{
+  pack: 'starter' | 'pro' | 'scale';
+}
+```
+
+### Response
+
+```typescript
+{
+  checkout_url: string;    // Stripe-hosted checkout page URL
+  payment_id: string;      // internal payment reference
+}
+```
+
+---
+
 ## Credit Packs
 
 | Pack | Credits | Price | Rate Limit |

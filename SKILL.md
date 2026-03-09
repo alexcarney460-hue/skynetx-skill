@@ -172,8 +172,9 @@ Two modes:
 - Sign up at skynetx.io for API key + 100 free credits
 - All responses include `_credits` field with remaining balance
 - Rate limits: 30/min (starter), 100/min (pro), 500/min (scale)
-- Credit packs: $5/1K, $29/10K, $99/100K (crypto payments on ETH, Base, Polygon, Arbitrum, BSC, and Solana via Phantom)
-- Solana payments: USDC and USDT on Solana are supported alongside EVM chains
+- Credit packs: $5/1K, $29/10K, $99/100K
+- Crypto payments: ETH, Base, Polygon, Arbitrum, BSC, and Solana via Phantom (USDC/USDT)
+- Card payments: Visa/Mastercard via Stripe
 
 ## Error Handling
 
