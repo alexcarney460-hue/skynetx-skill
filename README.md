@@ -24,7 +24,7 @@ curl -fsSL https://raw.githubusercontent.com/alexcarney460-hue/skynetx-skill/mai
 ## Setup
 
 1. Sign up at [skynetx.io](https://skynetx.io) to get your API key
-2. You get **100 free credits** on signup (1 credit per API call)
+2. You get the **Free tier** (100 credits/mo, 1 credit per API call)
 3. Restart Claude Code — the `skynetx` skill will appear in your skill list
 
 ## What It Does
@@ -61,14 +61,26 @@ curl https://skynetx.io/api/v1/drift \
 
 ## Pricing
 
+### Monthly Subscriptions (Stripe)
+
+| Tier | Price | Credits/mo | Rate Limit |
+|------|-------|------------|------------|
+| Free | $0 | 100 | 30/min |
+| Starter | $9/mo | 5,000 | 60/min |
+| Pro | $29/mo | 25,000 | 200/min |
+| Scale | $99/mo | 150,000 | 500/min |
+
+Credits refresh automatically each billing cycle.
+
+### Crypto Top-Ups (non-card users)
+
 | Pack | Credits | Price |
 |------|---------|-------|
-| Free | 100 | $0 |
-| Starter | 1,000 | $5 |
-| Pro | 10,000 | $29 |
-| Scale | 100,000 | $99 |
+| Small | 5,000 | $12 |
+| Medium | 25,000 | $40 |
+| Large | 150,000 | $130 |
 
-Payments via crypto (ETH, Base, Polygon, Arbitrum, BSC, and Solana via Phantom) or credit card (Visa/Mastercard via Stripe). USDC/USDT supported on Solana.
+Available via EVM (Ethereum, Base, Polygon, Arbitrum, BSC) or Solana (USDC/USDT).
 
 ## Uninstall
 

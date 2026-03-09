@@ -419,6 +419,9 @@ Store agent session data with automatic 7-day expiry.
 ```typescript
 {
   credits: number;
+  tier: 'free' | 'starter' | 'pro' | 'scale';
+  credits_monthly_allowance: number;
+  billing_cycle_end: string;          // ISO date — when credits refresh
   totalPurchased: number;
   payments: Array<{
     tx_hash: string;
@@ -433,15 +436,64 @@ Store agent session data with automatic 7-day expiry.
 
 ---
 
-## POST /api/v1/credits/purchase
+## POST /api/v1/subscribe
 
-Initiate a credit pack purchase. Returns payment details for the selected network.
+Create a Stripe checkout session for a monthly subscription. Redirects the user to Stripe-hosted checkout. Credits refresh automatically each month via the `invoice.paid` webhook.
 
 ### Request
 
 ```typescript
 {
-  pack: 'starter' | 'pro' | 'scale';
+  tier: 'starter' | 'pro' | 'scale';
+  success_url?: string;   // redirect after successful checkout (default: skynetx.io/billing)
+  cancel_url?: string;    // redirect if user cancels (default: skynetx.io/billing)
+}
+```
+
+### Response
+
+```typescript
+{
+  checkout_url: string;    // Stripe-hosted checkout page URL
+  tier: string;
+  credits_monthly: number;
+  price_usd: number;
+}
+```
+
+---
+
+## POST /api/v1/subscribe/manage
+
+Open the Stripe Customer Portal so the user can upgrade, downgrade, or cancel their subscription.
+
+### Request
+
+```typescript
+{
+  return_url?: string;    // where to redirect after portal session (default: skynetx.io/billing)
+}
+```
+
+### Response
+
+```typescript
+{
+  portal_url: string;     // Stripe Customer Portal URL
+}
+```
+
+---
+
+## POST /api/v1/credits/purchase
+
+Initiate a crypto top-up purchase. Returns payment details for the selected network. This is the alternative payment method for users without a card.
+
+### Request
+
+```typescript
+{
+  pack: 'small' | 'medium' | 'large';
   network: 'evm' | 'solana';          // payment network
   chain?: string;                       // for EVM: 'ethereum' | 'base' | 'polygon' | 'arbitrum' | 'bsc'
   token?: 'USDC' | 'USDT';            // for Solana (default: 'USDC')
@@ -498,37 +550,28 @@ The `tx_signature` field accepts both EVM transaction hashes (0x-prefixed hex st
 
 ---
 
-## POST /api/v1/purchase/stripe
+## Monthly Subscriptions (Stripe)
 
-Initiate a credit pack purchase via Stripe (Visa/Mastercard). Returns a Stripe checkout URL. The webhook handles credit addition automatically after successful payment.
+| Tier | Price | Credits/mo | Rate Limit |
+|------|-------|------------|------------|
+| Free | $0 | 100 | 30/min |
+| Starter | $9/mo | 5,000 | 60/min |
+| Pro | $29/mo | 25,000 | 200/min |
+| Scale | $99/mo | 150,000 | 500/min |
 
-### Request
+Credits refresh automatically each billing cycle via the Stripe `invoice.paid` webhook.
 
-```typescript
-{
-  pack: 'starter' | 'pro' | 'scale';
-}
-```
+## Crypto Top-Up Packs
 
-### Response
+One-time credit top-ups for users who prefer crypto or don't have a card. These credits are added on top of the monthly subscription allowance.
 
-```typescript
-{
-  checkout_url: string;    // Stripe-hosted checkout page URL
-  payment_id: string;      // internal payment reference
-}
-```
+| Pack | Credits | Price |
+|------|---------|-------|
+| Small | 5,000 | $12 |
+| Medium | 25,000 | $40 |
+| Large | 150,000 | $130 |
 
----
-
-## Credit Packs
-
-| Pack | Credits | Price | Rate Limit |
-|------|---------|-------|------------|
-| Free | 100 | $0 | 30/min |
-| Starter | 1,000 | $5 | 30/min |
-| Pro | 10,000 | $29 | 100/min |
-| Scale | 100,000 | $99 | 500/min |
+Networks: EVM (Ethereum, Base, Polygon, Arbitrum, BSC) or Solana (USDC/USDT).
 
 ---
 

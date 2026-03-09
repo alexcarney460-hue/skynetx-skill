@@ -19,7 +19,7 @@ Cognitive runtime API for autonomous agents. Provides real-time self-monitoring 
 
 **Base URL:** `https://skynetx.io/api/v1`
 **Auth:** `Authorization: Bearer sk_<your_key>`
-**Signup:** skynetx.io (100 free credits on signup, 1 credit per API call)
+**Signup:** skynetx.io (Free tier: 100 credits/mo, 1 credit per API call)
 
 ## When to Use
 
@@ -167,14 +167,36 @@ Two modes:
 - **Retrieve:** `GET /memory/retrieve?agent_id=x&session_id=y` — omit session_id to list all
 - **Clear:** `DELETE /memory/clear?agent_id=x&session_id=y` — omit session_id to clear all
 
-## Auth & Credits
+## Auth & Billing
 
-- Sign up at skynetx.io for API key + 100 free credits
+- Sign up at skynetx.io for API key + Free tier (100 credits/mo)
 - All responses include `_credits` field with remaining balance
-- Rate limits: 30/min (starter), 100/min (pro), 500/min (scale)
-- Credit packs: $5/1K, $29/10K, $99/100K
-- Crypto payments: ETH, Base, Polygon, Arbitrum, BSC, and Solana via Phantom (USDC/USDT)
-- Card payments: Visa/Mastercard via Stripe
+- Credits refresh monthly on billing cycle (via Stripe `invoice.paid` webhook)
+
+### Monthly Subscriptions (Stripe)
+
+| Tier | Price | Credits/mo | Rate Limit |
+|------|-------|------------|------------|
+| Free | $0 | 100 | 30/min |
+| Starter | $9/mo | 5,000 | 60/min |
+| Pro | $29/mo | 25,000 | 200/min |
+| Scale | $99/mo | 150,000 | 500/min |
+
+- `POST /subscribe` — create a Stripe checkout session for a subscription
+- `POST /subscribe/manage` — open the Stripe Customer Portal to change/cancel plan
+
+### Crypto Top-Ups (alternative for non-card users)
+
+For users who prefer crypto or don't have a card, one-time top-ups are available:
+
+| Pack | Credits | Price |
+|------|---------|-------|
+| Small | 5,000 | $12 |
+| Medium | 25,000 | $40 |
+| Large | 150,000 | $130 |
+
+- Networks: EVM (Ethereum, Base, Polygon, Arbitrum, BSC) or Solana (USDC/USDT)
+- `POST /credits/purchase` → get payment address, `POST /credits/confirm` → submit tx signature
 
 ## Error Handling
 
