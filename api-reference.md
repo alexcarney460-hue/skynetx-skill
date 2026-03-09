@@ -424,10 +424,75 @@ Store agent session data with automatic 7-day expiry.
     tx_hash: string;
     amount_usd: number;
     credits_purchased: number;
-    chain: 'ethereum' | 'base' | 'polygon' | 'arbitrum' | 'bsc';
+    chain: 'ethereum' | 'base' | 'polygon' | 'arbitrum' | 'bsc' | 'solana';
     confirmed: boolean;
     created_at: string;
   }>;
+}
+```
+
+---
+
+## POST /api/v1/credits/purchase
+
+Initiate a credit pack purchase. Returns payment details for the selected network.
+
+### Request
+
+```typescript
+{
+  pack: 'starter' | 'pro' | 'scale';
+  network: 'evm' | 'solana';          // payment network
+  chain?: string;                       // for EVM: 'ethereum' | 'base' | 'polygon' | 'arbitrum' | 'bsc'
+  token?: 'USDC' | 'USDT';            // for Solana (default: 'USDC')
+}
+```
+
+### Response
+
+```typescript
+{
+  purchase_id: string;
+  pack: string;
+  credits: number;
+  amount_usd: number;
+  network: 'evm' | 'solana';
+  payment_address: string;             // 0x address (EVM) or base58 address (Solana)
+  solana_wallet?: string;              // included when network is 'solana'
+  token?: string;                      // 'USDC' or 'USDT' for Solana
+  chain?: string;                      // EVM chain name when network is 'evm'
+  expires_at: string;
+}
+```
+
+---
+
+## POST /api/v1/credits/confirm
+
+Confirm a credit purchase by submitting the transaction signature.
+
+### Request
+
+```typescript
+{
+  purchase_id: string;
+  tx_signature: string;   // 0x-prefixed hex (EVM) or base58 (Solana)
+  network: 'evm' | 'solana';
+}
+```
+
+The `tx_signature` field accepts both EVM transaction hashes (0x-prefixed hex string) and Solana transaction signatures (base58-encoded string). The `network` field determines which chain is queried for confirmation.
+
+### Response
+
+```typescript
+{
+  confirmed: boolean;
+  credits_added: number;
+  credits_total: number;
+  tx_hash: string;
+  network: 'evm' | 'solana';
+  chain?: string;
 }
 ```
 

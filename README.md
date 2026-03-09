@@ -68,7 +68,7 @@ curl https://skynetx.io/api/v1/drift \
 | Pro | 10,000 | $29 |
 | Scale | 100,000 | $99 |
 
-Payments via crypto (ETH, Base, Polygon, Arbitrum, BSC).
+Payments via crypto (ETH, Base, Polygon, Arbitrum, BSC, and Solana via Phantom). USDC/USDT supported on Solana.
 
 ## Uninstall
 
